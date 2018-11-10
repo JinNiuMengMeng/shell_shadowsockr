@@ -354,7 +354,7 @@ Set_config_protocol(){
  ${Tip} 如果使用 auth_chain_a 协议，请加密方式选择 none，混淆随意(建议 plain)" && echo
 	# read -e -p "(默认: 2. auth_sha1_v4):" ssr_protocol
 	# [[ -z "${ssr_protocol}" ]] && ssr_protocol="2"
-	ssr_protocol=2
+	ssr_protocol=1
 	if [[ ${ssr_protocol} == "1" ]]; then
 		ssr_protocol="origin"
 	elif [[ ${ssr_protocol} == "2" ]]; then
