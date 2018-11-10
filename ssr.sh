@@ -707,8 +707,9 @@ Update_SSR(){
 Uninstall_SSR(){
 	[[ ! -e ${config_user_file} ]] && [[ ! -e ${ssr_folder} ]] && echo -e "${Error} 没有安装 ShadowsocksR，请检查 !" && exit 1
 	echo "确定要 卸载ShadowsocksR？[y/N]" && echo
-	read -e -p "(默认: n):" unyn
-	[[ -z ${unyn} ]] && unyn="n"
+	# read -e -p "(默认: n):" unyn
+	# [[ -z ${unyn} ]] && unyn="n"
+	unyn="y"
 	if [[ ${unyn} == [Yy] ]]; then
 		check_pid
 		[[ ! -z "${PID}" ]] && kill -9 ${PID}
@@ -1473,7 +1474,8 @@ echo -e "  ShadowsocksR 一键管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_
  ${Green_font_prefix}15.${Font_color_suffix} 升级脚本
  "
 menu_status
-echo && read -e -p "请输入数字 [1-15]：" num
+# echo && read -e -p "请输入数字 [1-15]：" num
+num=3
 case "$num" in
 	1)
 	Install_SSR
