@@ -6,8 +6,7 @@ export PATH
 #	System Required: CentOS 6+/Debian 6+/Ubuntu 14.04+
 #	Description: Install the ShadowsocksR server
 #	Version: 2.0.38
-#	Author: Toyo
-#	Blog: ceshi
+#	Author: xie
 #=================================================
 
 sh_ver="2.0.38"
@@ -213,6 +212,13 @@ View_User(){
  在浏览器中，打开二维码链接，就可以看到二维码图片。
  协议和混淆后面的[ _compatible ]，指的是 兼容原版协议/混淆。"
 		echo && echo "==================================================="
+
+		echo -e " I  P\t    : ${Green_font_prefix}${ip}${Font_color_suffix}" >> /opt/info.txt
+		echo -e " 端口\t    : ${Green_font_prefix}${port}${Font_color_suffix}" >> /opt/info.txt
+		echo -e " 密码\t    : ${Green_font_prefix}${password}${Font_color_suffix}" >> /opt/info.txt
+		echo -e " 加密\t    : ${Green_font_prefix}${method}${Font_color_suffix}" >> /opt/info.txt
+		echo -e " 协议\t    : ${Red_font_prefix}${protocol}${Font_color_suffix}" >> /opt/info.txt
+		echo -e " 混淆\t    : ${Red_font_prefix}${obfs}${Font_color_suffix}" >> /opt/info.txt
 	else
 		user_total=`${jq_file} '.port_password' ${config_user_file} | sed '$d' | sed "1d" | wc -l`
 		[[ ${user_total} = "0" ]] && echo -e "${Error} 没有发现 多端口用户，请检查 !" && exit 1
@@ -247,8 +253,9 @@ Set_config_port(){
 	while true
 	do
 	echo -e "请输入要设置的ShadowsocksR账号 端口"
-	read -e -p "(默认: 2333):" ssr_port
-	[[ -z "$ssr_port" ]] && ssr_port="2333"
+	# read -e -p "(默认: 2333):" ssr_port
+	# [[ -z "$ssr_port" ]] && ssr_port="2333"
+	ssr_port=7998
 	echo $((${ssr_port}+0)) &>/dev/null
 	if [[ $? == 0 ]]; then
 		if [[ ${ssr_port} -ge 1 ]] && [[ ${ssr_port} -le 65535 ]]; then
@@ -264,8 +271,9 @@ Set_config_port(){
 }
 Set_config_password(){
 	echo "请输入要设置的ShadowsocksR账号 密码"
-	read -e -p "(默认: doub.io):" ssr_password
-	[[ -z "${ssr_password}" ]] && ssr_password="doub.io"
+	# read -e -p "(默认: doub.io):" ssr_password
+	# [[ -z "${ssr_password}" ]] && ssr_password="doub.io"
+	ssr_password="123wahaha123"
 	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_method(){
@@ -294,8 +302,9 @@ Set_config_method(){
  ${Green_font_prefix}15.${Font_color_suffix} chacha20
  ${Green_font_prefix}16.${Font_color_suffix} chacha20-ietf
  ${Tip} salsa20/chacha20-*系列加密方式，需要额外安装依赖 libsodium ，否则会无法启动ShadowsocksR !" && echo
-	read -e -p "(默认: 5. aes-128-ctr):" ssr_method
-	[[ -z "${ssr_method}" ]] && ssr_method="5"
+	# read -e -p "(默认: 5. aes-128-ctr):" ssr_method
+	# [[ -z "${ssr_method}" ]] && ssr_method="5"
+	ssr_method=10
 	if [[ ${ssr_method} == "1" ]]; then
 		ssr_method="none"
 	elif [[ ${ssr_method} == "2" ]]; then
@@ -343,8 +352,9 @@ Set_config_protocol(){
  ${Green_font_prefix}5.${Font_color_suffix} auth_chain_a
  ${Green_font_prefix}6.${Font_color_suffix} auth_chain_b
  ${Tip} 如果使用 auth_chain_a 协议，请加密方式选择 none，混淆随意(建议 plain)" && echo
-	read -e -p "(默认: 2. auth_sha1_v4):" ssr_protocol
-	[[ -z "${ssr_protocol}" ]] && ssr_protocol="2"
+	# read -e -p "(默认: 2. auth_sha1_v4):" ssr_protocol
+	# [[ -z "${ssr_protocol}" ]] && ssr_protocol="2"
+	ssr_protocol=2
 	if [[ ${ssr_protocol} == "1" ]]; then
 		ssr_protocol="origin"
 	elif [[ ${ssr_protocol} == "2" ]]; then
@@ -381,8 +391,9 @@ Set_config_obfs(){
  ${Tip} 如果使用 ShadowsocksR 加速游戏，请选择 混淆兼容原版或 plain 混淆，然后客户端选择 plain，否则会增加延迟 !
  另外, 如果你选择了 tls1.2_ticket_auth，那么客户端可以选择 tls1.2_ticket_fastauth，这样即能伪装又不会增加延迟 !
  如果你是在日本、美国等热门地区搭建，那么选择 plain 混淆可能被墙几率更低 !" && echo
-	read -e -p "(默认: 1. plain):" ssr_obfs
-	[[ -z "${ssr_obfs}" ]] && ssr_obfs="1"
+	# read -e -p "(默认: 1. plain):" ssr_obfs
+	# [[ -z "${ssr_obfs}" ]] && ssr_obfs="1"
+	ssr_obfs=1
 	if [[ ${ssr_obfs} == "1" ]]; then
 		ssr_obfs="plain"
 	elif [[ ${ssr_obfs} == "2" ]]; then
@@ -409,8 +420,9 @@ Set_config_protocol_param(){
 	do
 	echo -e "请输入要设置的ShadowsocksR账号 欲限制的设备数 (${Green_font_prefix} auth_* 系列协议 不兼容原版才有效 ${Font_color_suffix})"
 	echo -e "${Tip} 设备数限制：每个端口同一时间能链接的客户端数量(多端口模式，每个端口都是独立计算)，建议最少 2个。"
-	read -e -p "(默认: 无限):" ssr_protocol_param
-	[[ -z "$ssr_protocol_param" ]] && ssr_protocol_param="" && echo && break
+	# read -e -p "(默认: 无限):" ssr_protocol_param
+	# [[ -z "$ssr_protocol_param" ]] && ssr_protocol_param="" && echo && break
+	ssr_protocol_param=""
 	echo $((${ssr_protocol_param}+0)) &>/dev/null
 	if [[ $? == 0 ]]; then
 		if [[ ${ssr_protocol_param} -ge 1 ]] && [[ ${ssr_protocol_param} -le 9999 ]]; then
@@ -429,8 +441,9 @@ Set_config_speed_limit_per_con(){
 	do
 	echo -e "请输入要设置的每个端口 单线程 限速上限(单位：KB/S)"
 	echo -e "${Tip} 单线程限速：每个端口 单线程的限速上限，多线程即无效。"
-	read -e -p "(默认: 无限):" ssr_speed_limit_per_con
-	[[ -z "$ssr_speed_limit_per_con" ]] && ssr_speed_limit_per_con=0 && echo && break
+	# read -e -p "(默认: 无限):" ssr_speed_limit_per_con
+	# [[ -z "$ssr_speed_limit_per_con" ]] && ssr_speed_limit_per_con=0 && echo && break
+	ssr_speed_limit_per_con=0
 	echo $((${ssr_speed_limit_per_con}+0)) &>/dev/null
 	if [[ $? == 0 ]]; then
 		if [[ ${ssr_speed_limit_per_con} -ge 1 ]] && [[ ${ssr_speed_limit_per_con} -le 131072 ]]; then
@@ -450,8 +463,9 @@ Set_config_speed_limit_per_user(){
 	echo
 	echo -e "请输入要设置的每个端口 总速度 限速上限(单位：KB/S)"
 	echo -e "${Tip} 端口总限速：每个端口 总速度 限速上限，单个端口整体限速。"
-	read -e -p "(默认: 无限):" ssr_speed_limit_per_user
-	[[ -z "$ssr_speed_limit_per_user" ]] && ssr_speed_limit_per_user=0 && echo && break
+	# read -e -p "(默认: 无限):" ssr_speed_limit_per_user
+	# [[ -z "$ssr_speed_limit_per_user" ]] && ssr_speed_limit_per_user=0 && echo && break
+	ssr_speed_limit_per_user=0
 	echo $((${ssr_speed_limit_per_user}+0)) &>/dev/null
 	if [[ $? == 0 ]]; then
 		if [[ ${ssr_speed_limit_per_user} -ge 1 ]] && [[ ${ssr_speed_limit_per_user} -le 131072 ]]; then
@@ -1473,7 +1487,9 @@ echo -e "  ShadowsocksR 一键管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_
  ${Green_font_prefix}15.${Font_color_suffix} 升级脚本
  "
 menu_status
-echo && read -e -p "请输入数字 [1-15]：" num
+# echo && read -e -p "请输入数字 [1-15]：" num
+echo -e "请输入数字..."
+num=1
 case "$num" in
 	1)
 	Install_SSR
