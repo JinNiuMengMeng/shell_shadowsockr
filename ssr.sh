@@ -444,7 +444,7 @@ Set_config_speed_limit_per_con(){
 	echo -e "${Tip} 单线程限速：每个端口 单线程的限速上限，多线程即无效。"
 	# read -e -p "(默认: 无限):" ssr_speed_limit_per_con
 	# [[ -z "$ssr_speed_limit_per_con" ]] && ssr_speed_limit_per_con=0 && echo && break
-	ssr_speed_limit_per_con=0
+	ssr_speed_limit_per_con=131072
 	echo $((${ssr_speed_limit_per_con}+0)) &>/dev/null
 	if [[ $? == 0 ]]; then
 		if [[ ${ssr_speed_limit_per_con} -ge 1 ]] && [[ ${ssr_speed_limit_per_con} -le 131072 ]]; then
@@ -466,7 +466,7 @@ Set_config_speed_limit_per_user(){
 	echo -e "${Tip} 端口总限速：每个端口 总速度 限速上限，单个端口整体限速。"
 	# read -e -p "(默认: 无限):" ssr_speed_limit_per_user
 	# [[ -z "$ssr_speed_limit_per_user" ]] && ssr_speed_limit_per_user=0 && echo && break
-	ssr_speed_limit_per_user=0
+	ssr_speed_limit_per_user=131072
 	echo $((${ssr_speed_limit_per_user}+0)) &>/dev/null
 	if [[ $? == 0 ]]; then
 		if [[ ${ssr_speed_limit_per_user} -ge 1 ]] && [[ ${ssr_speed_limit_per_user} -le 131072 ]]; then
